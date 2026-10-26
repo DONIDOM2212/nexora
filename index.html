@@ -1,0 +1,509 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#000000">
+<title>NEXORA — Space for business</title>
+<style>
+:root {
+  --bg: #050505;
+  --fg: #f5f5f5;
+  --muted: #999;
+  --line: #292929;
+  --panel: #101010;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none; }
+button, input {
+  font: inherit;
+}
+button { cursor: pointer; }
+header {
+  position: fixed;
+  inset: 0 0 auto;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 5%;
+  border-bottom: 1px solid #ffffff14;
+  background: #050505eF;
+  backdrop-filter: blur(14px);
+  z-index: 20;
+}
+.header-left, .header-right {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.icon-btn {
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: white;
+  background: transparent;
+  font-size: 20px;
+}
+.wordmark {
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: .25em;
+}
+.menu {
+  position: fixed;
+  z-index: 30;
+  top: 70px;
+  left: 0;
+  width: min(360px, 90vw);
+  padding: 24px;
+  background: #0c0c0c;
+  border: 1px solid var(--line);
+  transform: translateX(-105%);
+  transition: transform .3s ease;
+}
+.menu.open { transform: translateX(0); }
+.menu a {
+  display: block;
+  padding: 18px 4px;
+  border-bottom: 1px solid var(--line);
+  font-size: 15px;
+}
+.menu a:hover { color: #aaa; }
+main { position: relative; }
+.watermark {
+  position: fixed;
+  z-index: -1;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: 900;
+  font-size: min(115vw, 1000px);
+  line-height: .85;
+  color: #fff;
+  opacity: .035;
+  pointer-events: none;
+  transition: top .08s linear;
+}
+.hero {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 120px 20px 60px;
+}
+.hero-logo {
+  font-size: clamp(110px, 35vw, 310px);
+  line-height: .8;
+  font-weight: 900;
+  letter-spacing: -.09em;
+}
+.hero-name {
+  margin-top: 32px;
+  font-size: clamp(20px, 5vw, 38px);
+  letter-spacing: .32em;
+  font-weight: 800;
+  padding-left: .32em;
+}
+.tagline {
+  margin-top: 24px;
+  font-size: clamp(12px, 2.5vw, 15px);
+  color: #aaa;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.scroll-hint {
+  position: absolute;
+  bottom: 30px;
+  font-size: 10px;
+  color: #888;
+  letter-spacing: .2em;
+}
+section.content {
+  padding: 100px 7%;
+  border-top: 1px solid #ffffff15;
+}
+.container { max-width: 1000px; margin: auto; }
+.eyebrow {
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+h2 {
+  font-size: clamp(32px, 7vw, 68px);
+  line-height: .98;
+  letter-spacing: -.045em;
+  margin: 22px 0;
+}
+.lead {
+  max-width: 680px;
+  font-size: clamp(16px, 2.5vw, 21px);
+  line-height: 1.7;
+  color: #aaa;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 14px;
+  margin-top: 38px;
+}
+.card {
+  padding: 25px;
+  min-height: 150px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+}
+.card-number {
+  color: #777;
+  font-size: 12px;
+}
+.card h3 { margin: 28px 0 10px; font-size: 20px; }
+.card p { color: #999; font-size: 14px; line-height: 1.6; }
+.btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 48px;
+  padding: 0 22px;
+  border: 1px solid white;
+  background: white;
+  color: black;
+  font-weight: 700;
+  margin-top: 18px;
+}
+.btn.outline { background: transparent; color: white; }
+.btn:hover { opacity: .8; }
+.form {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+  max-width: 520px;
+}
+input {
+  width: 100%;
+  min-width: 0;
+  padding: 15px;
+  border: 1px solid var(--line);
+  background: #0d0d0d;
+  color: white;
+  border-radius: 0;
+}
+.profile-head {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  margin: 30px 0;
+}
+.avatar {
+  width: 64px;
+  height: 64px;
+  border: 1px solid #555;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+}
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 30px 0;
+}
+.stat {
+  border: 1px solid var(--line);
+  padding: 18px 12px;
+}
+.stat strong { display: block; font-size: 27px; margin-bottom: 8px; }
+.stat span { color: #999; font-size: 12px; line-height: 1.4; }
+.item {
+  padding: 22px 0;
+  border-bottom: 1px solid var(--line);
+}
+.item h3 { margin: 0 0 8px; }
+.item p { color: #999; margin: 0; line-height: 1.6; }
+.status {
+  display: inline-block;
+  border: 1px solid #555;
+  padding: 5px 9px;
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  margin-top: 12px;
+}
+.notice { color: #aaa; font-size: 13px; line-height: 1.6; }
+footer {
+  border-top: 1px solid var(--line);
+  padding: 35px 7%;
+  color: #777;
+  font-size: 12px;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translate(-50%, 150%);
+  background: white;
+  color: black;
+  padding: 15px 20px;
+  z-index: 100;
+  transition: transform .3s;
+  width: max-content;
+  max-width: 90vw;
+  font-size: 14px;
+}
+.toast.show { transform: translate(-50%, 0); }
+[hidden] { display: none !important; }
+@media (max-width: 600px) {
+  header { height: 62px; padding: 0 16px; }
+  .wordmark { font-size: 15px; letter-spacing: .18em; }
+  .icon-btn { width: 38px; height: 38px; }
+  .menu { top: 62px; }
+  section.content { padding: 78px 20px; }
+  .grid { grid-template-columns: 1fr; }
+  .card { min-height: 125px; }
+  .form { flex-direction: column; }
+  .stats { grid-template-columns: 1fr; }
+  .stat { display: flex; justify-content: space-between; align-items: center; }
+  .stat strong { margin: 0; }
+}
+</style>
+</head>
+<body>
+<div class="watermark" id="watermark">N</div>
+
+<header>
+  <div class="header-left">
+    <button class="icon-btn" id="menuBtn" aria-label="Открыть меню">☰</button>
+    <a class="wordmark" href="#home">NEXORA</a>
+  </div>
+  <div class="header-right">
+    <button class="icon-btn" id="profileBtn" aria-label="Профиль">♙</button>
+  </div>
+</header>
+
+<nav class="menu" id="menu">
+  <a href="#profile">Личный кабинет</a>
+  <a href="#support">Техническая поддержка</a>
+  <a href="#deals">Подтверждённые сделки</a>
+  <a href="#promo">Промокоды</a>
+  <a href="#groups">Мои группы</a>
+  <a href="#how">Как это работает</a>
+</nav>
+
+<main>
+<section class="hero" id="home">
+  <div class="hero-logo">N</div>
+  <div class="hero-name">NEXORA</div>
+  <div class="tagline">Find space. Build together.</div>
+  <div class="scroll-hint">ЛИСТАЙТЕ ВНИЗ ↓</div>
+</section>
+
+<section class="content" id="how">
+<div class="container">
+  <div class="eyebrow">01 / О проекте</div>
+  <h2>Бизнесу нужно пространство.<br>Мы находим решение.</h2>
+  <p class="lead">
+    NEXORA помогает предпринимателям находить подходящие помещения
+    и объединяться с другими бизнесами, которым нужны похожие площади
+    или локации. Вместо бесконечного поиска — одна заявка и понятный путь к сделке.
+  </p>
+  <div class="grid">
+    <article class="card">
+      <div class="card-number">01 — ЗАЯВКА</div>
+      <h3>Расскажи, что нужно</h3>
+      <p>Укажи тип помещения, площадь, бюджет и удобный район.</p>
+    </article>
+    <article class="card">
+      <div class="card-number">02 — ПОДБОР</div>
+      <h3>Найди единомышленников</h3>
+      <p>Сервис помогает находить предпринимателей с похожими запросами.</p>
+    </article>
+    <article class="card">
+      <div class="card-number">03 — ВАРИАНТЫ</div>
+      <h3>Изучи предложения</h3>
+      <p>Сравни подходящие помещения и условия аренды.</p>
+    </article>
+    <article class="card">
+      <div class="card-number">04 — РЕЗУЛЬТАТ</div>
+      <h3>Экономь время</h3>
+      <p>Обсуждай варианты с группой и переходи к согласованию условий.</p>
+    </article>
+  </div>
+  <a href="#groups" class="btn">Посмотреть группы</a>
+</div>
+</section>
+
+<section class="content" id="profile">
+<div class="container">
+  <div class="eyebrow">02 / Личный кабинет</div>
+  <h2>Твой бизнес.<br>Твой контроль.</h2>
+  <div class="profile-head">
+    <div class="avatar">N</div>
+    <div>
+      <h3 id="displayName">Новый пользователь</h3>
+      <p class="notice">Участник NEXORA</p>
+    </div>
+  </div>
+  <div class="stats">
+    <div class="stat"><strong>0</strong><span>Подтверждённых сделок</span></div>
+    <div class="stat"><strong>0</strong><span>Групп</span></div>
+    <div class="stat"><strong>0</strong><span>Помещений в работе</span></div>
+  </div>
+  <h3>Контактные данные</h3>
+  <p class="notice">Это демонстрационный профиль. Данные пока не сохраняются на сервере.</p>
+  <form id="profileForm" class="form">
+    <input id="firstName" placeholder="Имя" autocomplete="given-name">
+    <input id="lastName" placeholder="Фамилия" autocomplete="family-name">
+    <button class="btn" type="submit">Обновить имя</button>
+  </form>
+</div>
+</section>
+
+<section class="content" id="groups">
+<div class="container">
+  <div class="eyebrow">03 / Сообщество</div>
+  <h2>Мои группы.</h2>
+  <p class="lead">Здесь будут отображаться объединения предпринимателей, обсуждаемые помещения и этапы переговоров.</p>
+  <div class="item">
+    <h3>Складские помещения</h3>
+    <p>Пример группы · Подбор участников и площади</p>
+    <span class="status">Демо-пример</span>
+  </div>
+  <div class="item">
+    <h3>Коммерческие помещения</h3>
+    <p>Пример группы · Обсуждение локаций</p>
+    <span class="status">Демо-пример</span>
+  </div>
+  <button class="btn" id="groupBtn">Создать заявку</button>
+</div>
+</section>
+
+<section class="content" id="deals">
+<div class="container">
+  <div class="eyebrow">04 / История</div>
+  <h2>Подтверждённые сделки.</h2>
+  <p class="lead">История сделок будет доступна здесь после подключения системы и подтверждения реальных операций.</p>
+  <div class="item">
+    <h3>Пока нет сделок</h3>
+    <p>Когда появятся подтверждённые сделки, здесь будут указаны помещение, группа и стоимость.</p>
+  </div>
+</div>
+</section>
+
+<section class="content" id="promo">
+<div class="container">
+  <div class="eyebrow">05 / Привилегии</div>
+  <h2>Промокод.</h2>
+  <p class="lead">Есть код? Введи его здесь.</p>
+  <form class="form" id="promoForm">
+    <input id="promoInput" placeholder="ВВЕДИТЕ ПРОМОКОД" autocomplete="off">
+    <button class="btn" type="submit">Применить</button>
+  </form>
+  <p class="notice">Проверка промокодов пока не подключена.</p>
+</div>
+</section>
+
+<section class="content" id="support">
+<div class="container">
+  <div class="eyebrow">06 / Контакты</div>
+  <h2>На связи.</h2>
+  <p class="lead">Вопросы, предложения или сотрудничество? Свяжись с нами удобным способом.</p>
+  <div class="item">
+    <h3>Telegram</h3>
+    <p>@Wr_cone3Xx</p>
+    <a class="btn outline" href="https://t.me/Wr_cone3Xx" target="_blank" rel="noopener">Написать в Telegram</a>
+  </div>
+  <div class="item">
+    <h3>WhatsApp</h3>
+    <p>+7 925 405-63-60</p>
+    <a class="btn outline" href="https://wa.me/79254056360" target="_blank" rel="noopener">Написать в WhatsApp</a>
+  </div>
+  <div class="item">
+    <h3>Email</h3>
+    <p>dominik.jomidava@yandex.ru</p>
+    <a class="btn outline" href="mailto:dominik.jomidava@yandex.ru">Отправить письмо</a>
+  </div>
+</div>
+</section>
+</main>
+
+<footer>
+  <span class="wordmark">NEXORA</span>
+  <span>© 2026 NEXORA. Концепт продукта.</span>
+</footer>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const menu = document.getElementById('menu');
+const menuBtn = document.getElementById('menuBtn');
+const toast = document.getElementById('toast');
+
+menuBtn.addEventListener('click', () => {
+  menu.classList.toggle('open');
+  menuBtn.setAttribute('aria-expanded', menu.classList.contains('open'));
+});
+
+document.querySelectorAll('.menu a').forEach(link => {
+  link.addEventListener('click', () => menu.classList.remove('open'));
+});
+
+document.getElementById('profileBtn').addEventListener('click', () => {
+  document.getElementById('profile').scrollIntoView({behavior: 'smooth'});
+});
+
+let toastTimer;
+function showToast(message) {
+  toast.textContent = message;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 2800);
+}
+
+window.addEventListener('scroll', () => {
+  const y = window.scrollY;
+  document.getElementById('watermark').style.top = (80 - y * 0.38) + 'px';
+}, {passive: true});
+
+document.getElementById('profileForm').addEventListener('submit', event => {
+  event.preventDefault();
+  const first = document.getElementById('firstName').value.trim();
+  const last = document.getElementById('lastName').value.trim();
+  if (!first && !last) {
+    showToast('Введи имя или фамилию.');
+    return;
+  }
+  document.getElementById('displayName').textContent =
+    [first, last].filter(Boolean).join(' ');
+  showToast('Имя обновлено в этом демонстрационном сеансе.');
+});
+
+document.getElementById('promoForm').addEventListener('submit', event => {
+  event.preventDefault();
+  const code = document.getElementById('promoInput').value.trim();
+  showToast(code ? 'Проверка промокодов ещё не подключена.' : 'Введи промокод.');
+});
+
+document.getElementById('groupBtn').addEventListener('click', () => {
+  showToast('Заявки и создание групп появятся после подключения сервера.');
+});
+</script>
+</body>
+</html>
